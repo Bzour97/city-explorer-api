@@ -11,7 +11,8 @@ const server = express();
 
 const weatherInfos = require('./data/weather.json')
 
-const PORT = process.env.PORT;
+
+const PORT = 8000;
 server.use(cors());
 
 // localhost:3005/
@@ -35,18 +36,21 @@ server.get('/weather',(req,res)=>{
     let ourCity = req.query.city;
     console.log(req.query);
     console.log(req.query.city)
+    console.log(1, weatherInfos);
     let objForCast = []; 
     let infoForWather = weatherInfos.find((item)=>{
+        console.log(2, item.city_name)
         if(item.city_name === ourCity) {
             objForCast = item.data.map(itemDesc => 
-                new Forcast ( itemDesc.timeZ, itemDesc.weather.description )) ; 
+                // console.log(3, itemDesc)
+                new Forcast ( itemDesc.datetime, itemDesc.weather.description )) ; 
             return item;
         }
     })
     res.send({"weatherInfos": objForCast, "city": infoForWather.city_name, "lan": infoForWather.lat, "lon": infoForWather.lon});
 
 } catch (errorzZ){
-    res.status(500).send('Wrong request, you can only search for 3 cities');
+    res.send('Wrong request, you can only search for 3 cities' + errorzZ);
 }
 })
 // localhost:3005/ANYTHING
@@ -63,3 +67,4 @@ class Forcast {
       this.data = date;
       this.description = description;
     }}
+///// i hate my life
